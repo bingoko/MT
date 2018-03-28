@@ -41,10 +41,10 @@ namespace MarginTrading.Backend.Services
 
 		public void EnrichOpeningOrder(Order order)
 		{
-			order.EquivalentAsset = GetEquivalentAsset(order.ClientId, order.AccountId);
-			
 			try
 			{
+				order.EquivalentAsset = GetEquivalentAsset(order.ClientId, order.AccountId);
+
 				order.OpenPriceEquivalent = _cfdCalculatorService.GetQuoteRateForQuoteAsset(order.EquivalentAsset,
 					order.Instrument);
 			}
@@ -56,13 +56,13 @@ namespace MarginTrading.Backend.Services
 
 		public void EnrichClosingOrder(Order order)
 		{
-			if (string.IsNullOrEmpty(order.EquivalentAsset))
-			{
-				order.EquivalentAsset = GetEquivalentAsset(order.ClientId, order.AccountId);
-			}
-
 			try
 			{
+				if (string.IsNullOrEmpty(order.EquivalentAsset))
+				{
+					order.EquivalentAsset = GetEquivalentAsset(order.ClientId, order.AccountId);
+				}
+				
 				order.ClosePriceEquivalent = _cfdCalculatorService.GetQuoteRateForQuoteAsset(order.EquivalentAsset,
 					order.Instrument);
 			}
