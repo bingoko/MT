@@ -14,6 +14,10 @@ namespace MarginTrading.Backend.Contracts.DataReaderClient
         public IAccountAssetPairsReadingApi AccountAssetPairsRead { get; }
         public ITradeMonitoringReadingApi TradeMonitoringRead { get; }
         public ITradingConditionsReadingApi TradingConditionsRead { get; }
+        public IAccountGroupsReadingApi AccountGroups { get; }
+        public IDictionariesReadingApi Dictionaries { get; }
+        public IRoutesReadingApi Routes { get; }
+        public ISettingsReadingApi Settings { get; }
 
         public MtDataReaderClient(string url, string apiKey, string userAgent)
         {
@@ -27,6 +31,10 @@ namespace MarginTrading.Backend.Contracts.DataReaderClient
             AccountAssetPairsRead = RestService.For<IAccountAssetPairsReadingApi>(url, settings);
             TradeMonitoringRead = RestService.For<ITradeMonitoringReadingApi>(url, settings);
             TradingConditionsRead = RestService.For<ITradingConditionsReadingApi>(url, settings);
+            AccountGroups = RestService.For<IAccountGroupsReadingApi>(url, settings);
+            Dictionaries = RestService.For<IDictionariesReadingApi>(url, settings);
+            Routes = RestService.For<IRoutesReadingApi>(url, settings);
+            Settings = RestService.For<ISettingsReadingApi>(url, settings);
         }
     }
 }
