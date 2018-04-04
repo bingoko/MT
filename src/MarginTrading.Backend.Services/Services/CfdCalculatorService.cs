@@ -88,7 +88,7 @@ namespace MarginTrading.Backend.Services
         {
             var assetPair = _assetPairsCache.GetAssetPairById(instrumentId);
             
-            if (accountAssetId == assetPair.QuoteAssetId)
+            if (accountAssetId == assetPair.BaseAssetId)
                 return 1;
 
             var assetPairBaseAccount = _assetPairsCache.TryFindAssetPair(assetPair.BaseAssetId, accountAssetId, legalEntity);
