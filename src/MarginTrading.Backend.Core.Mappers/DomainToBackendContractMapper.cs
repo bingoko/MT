@@ -275,6 +275,7 @@ namespace MarginTrading.Backend.Core.Mappers
                 OpenPrice = src.OpenPrice,
                 ClosePrice = src.ClosePrice,
                 QuoteRate = src.GetQuoteRate(),
+                MarginRate = src.GetMarginRate(),
                 AssetAccuracy = src.AssetAccuracy,
                 Volume = src.Volume,
                 TakeProfit = src.TakeProfit,
