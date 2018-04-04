@@ -41,7 +41,8 @@ namespace MarginTradingTests
                 Instrument = instrument,
                 Volume = 10,
                 MatchedOrders = new MatchedOrderCollection( new List<MatchedOrder> { new MatchedOrder { MatchedDate = DateTime.UtcNow, Volume = 10 } }), //need for GetMatchedVolume()
-                OpenPrice = 790
+                OpenPrice = 790,
+                LegalEntity = "LYKKEVU",
             };
 
             order.UpdateClosePrice(800);
@@ -65,7 +66,8 @@ namespace MarginTradingTests
                 Instrument = instrument,
                 Volume = -10,
                 MatchedOrders = new MatchedOrderCollection( new List<MatchedOrder> { new MatchedOrder { MatchedDate = DateTime.UtcNow, Volume = 10 } }), //need for GetMatchedVolume()
-                OpenPrice = 790
+                OpenPrice = 790,
+                LegalEntity = "LYKKEVU",
             };
 
             order.UpdateClosePrice(800);
@@ -91,7 +93,8 @@ namespace MarginTradingTests
                 MatchedOrders = new MatchedOrderCollection( new List<MatchedOrder> { new MatchedOrder { MatchedDate = DateTime.UtcNow, Volume = 10 } }), //need for GetMatchedVolume()
                 OpenPrice = 790,
                 OpenCommission = 2,
-                CommissionLot = 10
+                CommissionLot = 10,
+                LegalEntity = "LYKKEVU",
             };
 
             order.UpdateClosePrice(800);
@@ -247,11 +250,11 @@ namespace MarginTradingTests
 
             Assert.AreEqual(50000, account.Balance);
             Assert.AreEqual(43673.100, Math.Round(account.GetTotalCapital(), 5));
-            Assert.AreEqual(34666.4, Math.Round(account.GetFreeMargin(), 1));
-            Assert.AreEqual(30163.1, Math.Round(account.GetMarginAvailable(), 1));
+            Assert.AreEqual(34524.1, Math.Round(account.GetFreeMargin(), 1));
+            Assert.AreEqual(29949.6, Math.Round(account.GetMarginAvailable(), 1));
             Assert.AreEqual(-6326.900, Math.Round(account.GetPnl(), 5));
-            Assert.AreEqual(9006.7, Math.Round(account.GetUsedMargin(), 1));
-            Assert.AreEqual(13510, Math.Round(account.GetMarginInit(), 1));
+            Assert.AreEqual(9149.0, Math.Round(account.GetUsedMargin(), 1));
+            Assert.AreEqual(13723.5, Math.Round(account.GetMarginInit(), 1));
 
         }
     }
