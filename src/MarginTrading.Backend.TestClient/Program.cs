@@ -5,6 +5,8 @@ using AsyncFriendlyStackTrace;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FluentAssertions;
+using Lykke.ClientGenerator;
+using Lykke.ClientGenerator.Retries;
 using MarginTrading.Backend.Contracts.AccountAssetPair;
 using MarginTrading.Backend.Contracts.AssetPairSettings;
 using MarginTrading.Backend.Contracts.Client;
@@ -57,8 +59,9 @@ namespace MarginTrading.Backend.TestClient
         {
             var services = new ServiceCollection();
             var builder = new ContainerBuilder();
-            services.RegisterMtBackendClient("http://localhost:5000", "margintrading", "TestClient");
-            services.RegisterMtDataReaderClient("http://localhost:5008", "margintrading", "TestClient");
+            var retryStrategy = new LinearRetryStrategy(TimeSpan.FromSeconds(10), 50);
+            services.RegisterMtBackendClient(ClientProxyGenerator.CreateDefault("http://localhost:5000", "margintrading", retryStrategy));
+            services.RegisterMtDataReaderClient(ClientProxyGenerator.CreateDefault("http://localhost:5008", "margintrading", retryStrategy));
             builder.Populate(services);
             var container = builder.Build();
             var backendClient = container.Resolve<IMtBackendClient>();
@@ -138,13 +141,22 @@ namespace MarginTrading.Backend.TestClient
             var assetSumary = await dataReaderClient.TradeMonitoringRead.AssetSummaryList().Dump();
 
             var openPositions = await dataReaderClient.TradeMonitoringRead.OpenPositions().Dump();
-            string clientId = openPositions.First().ClientId;
-            var openPositionsByClient = await dataReaderClient.TradeMonitoringRead.OpenPositionsByClient(clientId).Dump();
+            var openPosition = openPositions.FirstOrDefault();
+            if (openPosition != null)
+            {
+                string clientId = openPosition.ClientId;
+                var openPositionsByClient = await dataReaderClient.TradeMonitoringRead.OpenPositionsByClient(clientId).Dump();
+            }
             var openPositionsByDate = await dataReaderClient.TradeMonitoringRead.OpenPositionsByDate(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow).Dump();
             var openPositionsByVolume = await dataReaderClient.TradeMonitoringRead.OpenPositionsByVolume(100).Dump();
 
             var pendingOrders = await dataReaderClient.TradeMonitoringRead.PendingOrders().Dump();
-            var pendingOrdersByClient = await dataReaderClient.TradeMonitoringRead.PendingOrdersByClient(clientId).Dump();
+            var pendingOrder = pendingOrders.FirstOrDefault();
+            if (pendingOrder != null)
+            {
+                string clientId = pendingOrder.ClientId;
+                var pendingOrdersByClient = await dataReaderClient.TradeMonitoringRead.PendingOrdersByClient(clientId).Dump();
+            }            
             var pendingOrdersByDate = await dataReaderClient.TradeMonitoringRead.PendingOrdersByDate(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow).Dump();
             var pendingOrdersByVolume = await dataReaderClient.TradeMonitoringRead.PendingOrdersByVolume(100).Dump();
 
@@ -241,6 +253,7 @@ namespace MarginTrading.Backend.TestClient
             var matchingEngines = await dataReaderClient.Dictionaries.MatchingEngines().Dump();
             var orderTypes = await dataReaderClient.Dictionaries.OrderTypes().Dump();
 
+           
             var routes = await dataReaderClient.Routes.List().Dump();
             var route1 = routes.FirstOrDefault();
             if (route1 != null)
