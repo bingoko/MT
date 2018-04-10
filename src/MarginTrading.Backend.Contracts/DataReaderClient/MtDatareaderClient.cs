@@ -27,10 +27,6 @@ namespace MarginTrading.Backend.Contracts.DataReaderClient
             Dictionaries = clientGenerator.Generate<IDictionariesReadingApi>();
             Routes = clientGenerator.Generate<IRoutesReadingApi>();
             Settings = clientGenerator.Generate<ISettingsReadingApi>();
-            AccountGroups = RestService.For<IAccountGroupsReadingApi>(url, settings);
-            Dictionaries = RestService.For<IDictionariesReadingApi>(url, settings);
-            Routes = RestService.For<IRoutesReadingApi>(url, settings);
-            Settings = RestService.For<ISettingsReadingApi>(url, settings);
         }
     }
 }
