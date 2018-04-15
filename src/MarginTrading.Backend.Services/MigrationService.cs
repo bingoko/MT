@@ -30,7 +30,7 @@ namespace MarginTrading.Backend.Services
         public async Task InvokeAll()
         {
             var migrationVersions = await _marginTradingBlobRepository.ReadAsync<Dictionary<string, int>>(
-                                     LykkeConstants.StateBlobContainer, "versions") ?? new Dictionary<string, int>();
+                                     LykkeConstants.MigrationsBlobContainer, "versions") ?? new Dictionary<string, int>();
             
             foreach (var migration in _migrations)
             {
@@ -39,7 +39,7 @@ namespace MarginTrading.Backend.Services
                 try
                 {
                     if (!migrationVersions.TryGetValue(migrationName, out var version)
-                        && version < migration.Version)
+                        || version < migration.Version)
                     {
                         await migration.Invoke();
 
@@ -53,7 +53,7 @@ namespace MarginTrading.Backend.Services
                 }
             }
 
-            await _marginTradingBlobRepository.Write(LykkeConstants.StateBlobContainer, "versions", migrationVersions);
+            await _marginTradingBlobRepository.Write(LykkeConstants.MigrationsBlobContainer, "versions", migrationVersions);
         }
     }
 }
