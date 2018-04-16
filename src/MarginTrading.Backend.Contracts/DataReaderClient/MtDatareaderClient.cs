@@ -1,4 +1,6 @@
 ﻿using Lykke.HttpClientGenerator;
+using MarginTrading.Backend.Contracts.Infrastructure;
+using AopProxy = Lykke.HttpClientGenerator.Infrastructure.AopProxy;
 
 namespace MarginTrading.Backend.Contracts.DataReaderClient
 {
@@ -27,6 +29,12 @@ namespace MarginTrading.Backend.Contracts.DataReaderClient
             Dictionaries = clientGenerator.Generate<IDictionariesReadingApi>();
             Routes = clientGenerator.Generate<IRoutesReadingApi>();
             Settings = clientGenerator.Generate<ISettingsReadingApi>();
+        }
+
+        private T AddCaching<T>(T obj)
+        {
+            var cachingHelper = new CachingHelper();
+            return AopProxy.Create(obj, cachingHelper.HandleMethodCall);
         }
     }
 }
